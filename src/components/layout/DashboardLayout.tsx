@@ -3,8 +3,7 @@ import { Outlet, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
-import { VideoCallModal } from '../../components/collaboration/VideoCallModal';
-
+import { VideoCallModal } from '../collaboration/videoCallModal';
 export const DashboardLayout: React.FC = () => {
   const { user, isAuthenticated, isLoading } = useAuth();
   const [isCallOpen, setIsCallOpen] = useState(false);
