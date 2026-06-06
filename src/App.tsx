@@ -22,10 +22,12 @@ import { InvestorsPage } from './pages/investors/InvestorsPage';
 import { EntrepreneursPage } from './pages/entrepreneurs/EntrepreneursPage';
 import { MessagesPage } from './pages/messages/MessagesPage';
 import { NotificationsPage } from './pages/notifications/NotificationsPage';
-import { DocumentsPage } from './pages/documents/DocumentsPage';
 import { SettingsPage } from './pages/settings/SettingsPage';
 import { HelpPage } from './pages/help/HelpPage';
 import { DealsPage } from './pages/deals/DealsPage';
+
+// New Document Page
+import DocumentChamber from './pages/documents/DocumentChamber';
 
 // Chat Pages
 import { ChatPage } from './pages/chat/ChatPage';
@@ -43,6 +45,9 @@ function App() {
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route path="entrepreneur" element={<EntrepreneurDashboard />} />
             <Route path="investor" element={<InvestorDashboard />} />
+            {/* Sidebar navigation ke liye paths update kiye hain */}
+            <Route path="documents" element={<DocumentChamber />} />
+            <Route path="deals" element={<DocumentChamber />} />
           </Route>
           
           {/* Profile Routes */}
@@ -68,8 +73,9 @@ function App() {
             <Route index element={<NotificationsPage />} />
           </Route>
           
+          {/* Purana Documents route delete karke ye naya path use karein */}
           <Route path="/documents" element={<DashboardLayout />}>
-            <Route index element={<DocumentsPage />} />
+            <Route index element={<DocumentChamber />} />
           </Route>
           
           <Route path="/settings" element={<DashboardLayout />}>

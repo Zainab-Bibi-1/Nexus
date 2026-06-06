@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { Menu, X, Bell, MessageCircle, User, LogOut, Building2, CircleDollarSign } from 'lucide-react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { Menu, X, Bell, MessageCircle, User, LogOut, Building2, CircleDollarSign, Video } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { Avatar } from '../ui/Avatar';
 import { Button } from '../ui/Button';
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+  onJoinCall?: () => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ onJoinCall }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -19,12 +24,10 @@ export const Navbar: React.FC = () => {
     navigate('/login');
   };
   
-  // User dashboard route based on role
   const dashboardRoute = user?.role === 'entrepreneur' 
     ? '/dashboard/entrepreneur' 
     : '/dashboard/investor';
   
-  // User profile route based on role and ID
   const profileRoute = user 
     ? `/profile/${user.role}/${user.id}` 
     : '/login';
@@ -51,12 +54,15 @@ export const Navbar: React.FC = () => {
       path: profileRoute,
     }
   ];
+
+  // Check if current path is any part of the dashboard
+  const isDashboard = location.pathname.includes('/dashboard');
   
   return (
     <nav className="bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          {/* Logo and brand */}
+          {/* Logo Section */}
           <div className="flex-shrink-0 flex items-center">
             <Link to="/" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-primary-600 rounded-md flex items-center justify-center">
@@ -69,10 +75,26 @@ export const Navbar: React.FC = () => {
             </Link>
           </div>
           
-          {/* Desktop navigation */}
+          {/* Desktop Nav */}
           <div className="hidden md:flex md:items-center md:ml-6">
             {user ? (
               <div className="flex items-center space-x-4">
+                
+                {/* UPDATED LOGIC: Shows for both Entrepreneur and Investor */}
+                {isDashboard && onJoinCall && (
+                  user.role === 'entrepreneur' || user.role === 'investor'
+                ) && (
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    leftIcon={<Video size={16} />}
+                    onClick={onJoinCall}
+                    className="border-primary-600 text-primary-600 hover:bg-primary-50 mr-2"
+                  >
+                    Join Live Call
+                  </Button>
+                )}
+
                 {navLinks.map((link, index) => (
                   <Link
                     key={index}
@@ -104,97 +126,20 @@ export const Navbar: React.FC = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-4">
-                <Link to="/login">
-                  <Button variant="outline">Log in</Button>
-                </Link>
-                <Link to="/register">
-                  <Button>Sign up</Button>
-                </Link>
+                <Link to="/login"><Button variant="outline">Log in</Button></Link>
+                <Link to="/register"><Button>Sign up</Button></Link>
               </div>
             )}
           </div>
           
-          {/* Mobile menu button */}
+          {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
-            <button
-              onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-primary-600 hover:bg-gray-50 focus:outline-none"
-            >
-              {isMenuOpen ? (
-                <X className="block h-6 w-6" />
-              ) : (
-                <Menu className="block h-6 w-6" />
-              )}
+            <button onClick={toggleMenu} className="text-gray-500 hover:text-gray-700">
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
       </div>
-      
-      {/* Mobile menu */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-white border-b border-gray-200 animate-fade-in">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {user ? (
-              <>
-                <div className="flex items-center space-x-3 px-3 py-2">
-                  <Avatar
-                    src={user.avatarUrl}
-                    alt={user.name}
-                    size="sm"
-                    status={user.isOnline ? 'online' : 'offline'}
-                  />
-                  <div>
-                    <p className="text-sm font-medium text-gray-800">{user.name}</p>
-                    <p className="text-xs text-gray-500 capitalize">{user.role}</p>
-                  </div>
-                </div>
-                
-                <div className="border-t border-gray-200 pt-2">
-                  {navLinks.map((link, index) => (
-                    <Link
-                      key={index}
-                      to={link.path}
-                      className="flex items-center px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-md"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <span className="mr-3">{link.icon}</span>
-                      {link.text}
-                    </Link>
-                  ))}
-                  
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setIsMenuOpen(false);
-                    }}
-                    className="flex w-full items-center px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-md"
-                  >
-                    <LogOut size={18} className="mr-3" />
-                    Logout
-                  </button>
-                </div>
-              </>
-            ) : (
-              <div className="flex flex-col space-y-2 px-3 py-2">
-                <Link 
-                  to="/login" 
-                  className="w-full"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <Button variant="outline" fullWidth>Log in</Button>
-                </Link>
-                <Link 
-                  to="/register" 
-                  className="w-full"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <Button fullWidth>Sign up</Button>
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </nav>
   );
 };

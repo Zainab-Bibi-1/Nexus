@@ -9,6 +9,7 @@ interface BadgeProps {
   size?: BadgeSize;
   rounded?: boolean;
   className?: string;
+  onClick?: () => void; // <--- Added this to fix the error
 }
 
 export const Badge: React.FC<BadgeProps> = ({
@@ -17,6 +18,7 @@ export const Badge: React.FC<BadgeProps> = ({
   size = 'md',
   rounded = false,
   className = '',
+  onClick, // <--- Destructure onClick
 }) => {
   const variantClasses = {
     primary: 'bg-primary-100 text-primary-800',
@@ -38,7 +40,8 @@ export const Badge: React.FC<BadgeProps> = ({
   
   return (
     <span
-      className={`inline-flex items-center font-medium ${roundedClass} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      onClick={onClick} // <--- Added onClick here
+      className={`inline-flex items-center font-medium ${roundedClass} ${variantClasses[variant]} ${sizeClasses[size]} ${className} ${onClick ? 'cursor-pointer hover:opacity-80' : ''}`}
     >
       {children}
     </span>
