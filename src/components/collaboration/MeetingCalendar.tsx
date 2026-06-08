@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { VideoCallModal } from './VideoCallModal';
+import { VideoCallModal } from './videoCallModal';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
