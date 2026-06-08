@@ -35,7 +35,8 @@ import { ChatPage } from './pages/chat/ChatPage';
 function App() {
   return (
     <AuthProvider>
-      <Router>
+      {/* GitHub Pages ke sub-folder path ko resolve karne ke liye basename set kar diya hay */}
+      <Router basename="/Nexus">
         <Routes>
           {/* Authentication Routes */}
           <Route path="/login" element={<LoginPage />} />
@@ -73,7 +74,7 @@ function App() {
             <Route index element={<NotificationsPage />} />
           </Route>
           
-          {/* Purana Documents route delete karke ye naya path use karein */}
+          {/* ..*/}
           <Route path="/documents" element={<DashboardLayout />}>
             <Route index element={<DocumentChamber />} />
           </Route>
